@@ -2,9 +2,11 @@ import torch
 import torchvision.models as models
 from torch.profiler import profile, record_function, ProfilerActivity
 
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True).cuda()
+#model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True).cuda()
+model = models.resnet18()
 
-imgs = ['https://ultralytics.com/images/zidane.jpg']
+#imgs = ['https://ultralytics.com/images/zidane.jpg']
+imgs = torch.randn(5,3,224,224)
 
 with profile(
     activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
@@ -17,10 +19,10 @@ with profile(
 
 
 # Print aggregated stats
-print(prof.key_averages().table(sort_by="self_cuda_time_total", row_limit=20))
+print(prof.key_averages().table(row_limit=5))
 
 #추적기능 사용하기
-prof.export_chrome_trace("trace.json")
+#prof.export_chrome_trace("trace.json")
 
 prof.export_stacks("./profiler_stacks.txt", "self_cuda_time_total")
 
